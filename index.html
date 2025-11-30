@@ -555,7 +555,7 @@
             en: {
                 // Navbar
                 nav_home: 'Home',
-                nav_stack: 'Stack',
+                nav_stack: 'Tech Stack',
                 nav_services: 'Services',
                 nav_projects: 'Projects',
                 nav_reviews: 'Reviews',
@@ -773,6 +773,9 @@
             updateFlagIcon();
             applyTranslations();
         }
+        
+        // Hacemos toggleLanguage global para que el onclick del HTML lo encuentre
+        window.toggleLanguage = toggleLanguage;
 
         /**
          * Actualiza el icono de la bandera en la barra de navegación.
