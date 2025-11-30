@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Ingeniero Software / Software Engineer Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome (for icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Flag Icons CSS (Dependency for Flags) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9', // Sky blue
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        },
+                        accent: {
+                            500: '#8b5cf6', // Violet
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                        'modal-open': 'modalOpen 0.3s forwards',
+                        'modal-close': 'modalClose 0.3s forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1', },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        modalOpen: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        modalClose: {
+                            '0%': { opacity: '1', transform: 'translateY(0)' },
+                            '100%': { opacity: '0', transform: 'translateY(10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-text {
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            opacity: 0.4;
+            z-index: -1;
+        }
+        /* Custom Scrollbar for Modal */
+        .modal-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .modal-scroll::-webkit-scrollbar-track {
+            background: #1f2937; 
+        }
+        .modal-scroll::-webkit-scrollbar-thumb {
+            background: #4b5563; 
+            border-radius: 4px;
+        }
+        .modal-scroll::-webkit-scrollbar-thumb:hover {
+            background: #6b7280; 
+        }
+
+        /* Styling for Flag Icons */
+        .flag-icon-container {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px; /* Reduced width for better fit */
+            height: 32px;
+            cursor: pointer;
+            border-radius: 9999px; /* rounded-full */
+            border: 1px solid #374151; /* border-gray-700 */
+            transition: all 0.2s;
+        }
+        .flag-icon-container:hover {
+            border-color: #4b5563; /* border-gray-600 */
+        }
+        .flag-icon-container .flag-icon {
+            line-height: 1;
+            font-size: 1.5em; /* Adjust size */
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Testimonials Carousel Styling */
+        .testimonial-carousel {
+            display: flex;
+            overflow-x: hidden;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch; /* For smoother iOS scrolling */
+            scroll-behavior: smooth;
+        }
+
+        .testimonial-card {
+            flex: 0 0 100%; /* Each card takes full width */
+            scroll-snap-align: start;
+            min-width: 100%;
+        }
+
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-40 bg-gray-900/90 backdrop-blur-md border-b border-gray-800 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-white tracking-tighter cursor-pointer" onclick="window.scrollTo(0,0)">Dev<span class="text-brand-500">.Portfolio</span></span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <!-- Language Toggle (Flags) -->
+                    <div id="lang-toggle-container" class="flag-icon-container" onclick="toggleLanguage()" aria-label="Cambiar Idioma">
+                        <!-- Flag icons will be injected here by JS -->
+                    </div>
+
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-8">
+                            <a href="#inicio" class="hover:text-brand-400 transition-colors px-3 py-2 rounded-md text-sm font-medium" data-i18n-key="nav_home">Inicio</a>
+                            <a href="#skills" class="hover:text-brand-400 transition-colors px-3 py-2 rounded-md text-sm font-medium" data-i18n-key="nav_stack">Stack</a>
+                            <a href="#servicios" class="hover:text-brand-400 transition-colors px-3 py-2 rounded-md text-sm font-medium" data-i18n-key="nav_services">Servicios</a>
+                            <a href="#portfolio" class="hover:text-brand-400 transition-colors px-3 py-2 rounded-md text-sm font-medium" data-i18n-key="nav_projects">Proyectos</a>
+                            <a href="#testimonios" class="hover:text-brand-400 transition-colors px-3 py-2 rounded-md text-sm font-medium" data-i18n-key="nav_reviews">Opiniones</a>
+                            <a href="#contacto" class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-all transform hover:scale-105" data-i18n-key="nav_contact_btn">Contactar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="hidden md:hidden bg-gray-800 border-b border-gray-700" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#inicio" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700" onclick="document.getElementById('mobile-menu').classList.add('hidden')" data-i18n-key="nav_home">Inicio</a>
+                <a href="#skills" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700" onclick="document.getElementById('mobile-menu').classList.add('hidden')" data-i18n-key="nav_stack">Stack</a>
+                <a href="#servicios" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700" onclick="document.getElementById('mobile-menu').classList.add('hidden')" data-i18n-key="nav_services">Servicios</a>
+                <a href="#portfolio" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700" onclick="document.getElementById('mobile-menu').classList.add('hidden')" data-i18n-key="nav_projects">Proyectos</a>
+                <a href="#testimonios" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700" onclick="document.getElementById('mobile-menu').classList.add('hidden')" data-i18n-key="nav_reviews">Opiniones</a>
+                <a href="#contacto" class="block px-3 py-2 rounded-md text-base font-medium text-brand-400" onclick="document.getElementById('mobile-menu').classList.add('hidden')" data-i18n-key="nav_contact_btn">Contactar</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <!-- Background Blobs -->
+        <div class="blob bg-brand-600 w-96 h-96 rounded-full top-0 left-0 -translate-x-1/2 -translate-y-1/2 animate-pulse" style="animation-duration: 4s;"></div>
+        <div class="blob bg-accent-500 w-80 h-80 rounded-full bottom-0 right-0 translate-x-1/3 translate-y-1/3 animate-pulse" style="animation-duration: 6s;"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div class="animate-slide-up">
+                <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-6 tracking-tight">
+                    <span data-i18n-key="hero_line_1">Desarrollo de Software adaptable con</span> <br>
+                    <span class="gradient-text" data-i18n-key="hero_line_2">Diversos Stacks y Arquitectura Cloud</span>
+                </h1>
+                <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-400" data-i18n-key="hero_subtitle">
+                    Soy un Ingeniero de Software con experiencia en MEAN, MERN, PHP/Laravel y arquitecturas cloud robustas (AWS/Firebase).
+                </p>
+                <div class="mt-10 flex justify-center gap-4">
+                    <a href="#portfolio" class="px-8 py-3 border border-transparent text-base font-medium rounded-full text-white bg-brand-600 hover:bg-brand-700 md:py-4 md:text-lg md:px-10 transition-all shadow-lg shadow-brand-500/20 transform hover:-translate-y-1" data-i18n-key="hero_projects_btn">
+                        Ver Proyectos
+                    </a>
+                    <a href="#contacto" class="px-8 py-3 border border-gray-700 text-base font-medium rounded-full text-gray-300 hover:bg-gray-800 md:py-4 md:text-lg md:px-10 transition-all hover:border-gray-500" data-i18n-key="hero_contact_btn">
+                        Hablemos
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Tech badges -->
+            <div class="mt-12 flex flex-wrap justify-center gap-6 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
+                <i class="fab fa-angular text-4xl text-red-600 hover:scale-110 transition-transform" title="Angular"></i>
+                <i class="fab fa-react text-4xl text-sky-400 hover:scale-110 transition-transform" title="React"></i>
+                <i class="fab fa-php text-4xl text-indigo-400 hover:scale-110 transition-transform" title="PHP"></i>
+                <i class="fab fa-laravel text-4xl text-red-500 hover:scale-110 transition-transform" title="Laravel"></i>
+                <i class="fab fa-aws text-4xl text-orange-500 hover:scale-110 transition-transform" title="AWS"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 bg-gray-800/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-white" data-i18n-key="skills_title">Mi Arsenal Tecnológico</h2>
+                <p class="mt-4 text-gray-400" data-i18n-key="skills_subtitle">Herramientas que utilizo para dar vida a las ideas</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+                <!-- Skill 1: Angular -->
+                <div class="p-6 bg-gray-900 rounded-xl border border-gray-700 hover:border-brand-500 transition-all group cursor-default">
+                    <div class="text-red-500 mb-4 text-3xl group-hover:scale-110 transition-transform"><i class="fab fa-angular"></i></div>
+                    <h3 class="text-lg font-semibold text-white" data-i18n-key="skill_angular_name">Angular (MEAN)</h3>
+                    <p class="text-sm text-gray-400 mt-2" data-i18n-key="skill_angular_desc">Componentes, Signals y NGRX.</p>
+                </div>
+                <!-- Skill 2: React (MERN) -->
+                <div class="p-6 bg-gray-900 rounded-xl border border-gray-700 hover:border-brand-500 transition-all group cursor-default">
+                    <div class="text-sky-400 mb-4 text-3xl group-hover:scale-110 transition-transform"><i class="fab fa-react"></i></div>
+                    <h3 class="text-lg font-semibold text-white" data-i18n-key="skill_react_name">React (MERN)</h3>
+                    <p class="text-sm text-gray-400 mt-2" data-i18n-key="skill_react_desc">Hooks, Context API y Redux.</p>
+                </div>
+                <!-- Skill 3: Node.js (E/N) -->
+                <div class="p-6 bg-gray-900 rounded-xl border border-gray-700 hover:border-brand-500 transition-all group cursor-default">
+                    <div class="text-green-500 mb-4 text-3xl group-hover:scale-110 transition-transform"><i class="fab fa-node-js"></i></div>
+                    <h3 class="text-lg font-semibold text-white" data-i18n-key="skill_node_name">Node.js</h3>
+                    <p class="text-sm text-gray-400 mt-2" data-i18n-key="skill_node_desc">REST APIs y Express.</p>
+                </div>
+                <!-- Skill 4: PHP -->
+                <div class="p-6 bg-gray-900 rounded-xl border border-gray-700 hover:border-brand-500 transition-all group cursor-default">
+                    <div class="text-indigo-400 mb-4 text-3xl group-hover:scale-110 transition-transform"><i class="fab fa-php"></i></div>
+                    <h3 class="text-lg font-semibold text-white" data-i18n-key="skill_php_name">PHP Core</h3>
+                    <p class="text-sm text-gray-400 mt-2" data-i18n-key="skill_php_desc">Desarrollo backend robusto.</p>
+                </div>
+                <!-- Skill 5: Laravel -->
+                <div class="p-6 bg-gray-900 rounded-xl border border-gray-700 hover:border-brand-500 transition-all group cursor-default">
+                    <div class="text-red-500 mb-4 text-3xl group-hover:scale-110 transition-transform"><i class="fab fa-laravel"></i></div>
+                    <h3 class="text-lg font-semibold text-white" data-i18n-key="skill_laravel_name">Laravel</h3>
+                    <p class="text-sm text-gray-400 mt-2" data-i18n-key="skill_laravel_desc">Eloquent ORM y Blade.</p>
+                </div>
+                <!-- Skill 6: AWS Cloud -->
+                <div class="p-6 bg-gray-900 rounded-xl border border-gray-700 hover:border-brand-500 transition-all group cursor-default">
+                    <div class="text-orange-500 mb-4 text-3xl group-hover:scale-110 transition-transform"><i class="fab fa-aws"></i></div>
+                    <h3 class="text-lg font-semibold text-white" data-i18n-key="skill_aws_name">AWS Cloud</h3>
+                    <p class="text-sm text-gray-400 mt-2" data-i18n-key="skill_aws_desc">Lambda, S3, EC2, CloudFront.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="servicios" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-white" data-i18n-key="services_title">Servicios Especializados</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="bg-gray-800 rounded-2xl p-8 hover:-translate-y-2 transition-transform duration-300 shadow-xl border border-transparent hover:border-gray-700">
+                    <div class="w-14 h-14 bg-brand-900/50 rounded-lg flex items-center justify-center mb-6 text-brand-400">
+                        <i class="fas fa-layer-group text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3" data-i18n-key="service_fullstack_name">Desarrollo Full Stack</h3>
+                    <p class="text-gray-400 leading-relaxed" data-i18n-key="service_fullstack_desc">
+                        Creación de aplicaciones web complejas de punta a punta en stacks como MEAN, MERN y Laravel.
+                    </p>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="bg-gray-800 rounded-2xl p-8 hover:-translate-y-2 transition-transform duration-300 shadow-xl relative border border-brand-500/30">
+                    <div class="absolute top-0 right-0 bg-brand-600 text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-lg text-white" data-i18n-key="service_popular">Popular</div>
+                    <div class="w-14 h-14 bg-purple-900/50 rounded-lg flex items-center justify-center mb-6 text-purple-400">
+                        <i class="fas fa-rocket text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3" data-i18n-key="service_landing_name">Landing Pages</h3>
+                    <p class="text-gray-400 leading-relaxed" data-i18n-key="service_landing_desc">
+                        Páginas de aterrizaje de alto rendimiento. Optimizadas para SEO, carga ultrarrápida y máxima conversión.
+                    </p>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="bg-gray-800 rounded-2xl p-8 hover:-translate-y-2 transition-transform duration-300 shadow-xl border border-transparent hover:border-gray-700">
+                    <div class="w-14 h-14 bg-orange-900/50 rounded-lg flex items-center justify-center mb-6 text-orange-400">
+                        <i class="fas fa-cloud text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3" data-i18n-key="service_cloud_name">Arquitectura Cloud</h3>
+                    <p class="text-gray-400 leading-relaxed" data-i18n-key="service_cloud_desc">
+                        Diseño e implementación de infraestructura escalable en AWS y Firebase. Serverless, Contenedores y CI/CD.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section (Interactive) -->
+    <section id="portfolio" class="py-20 bg-gray-800/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                <div>
+                    <h2 class="text-3xl font-bold text-white" data-i18n-key="projects_title">Proyectos Destacados</h2>
+                    <p class="mt-2 text-gray-400" data-i18n-key="projects_subtitle">Haz clic en un proyecto para ver los detalles técnicos.</p>
+                </div>
+                <a href="https://github.com/tu-usuario" target="_blank" class="hidden md:inline-block text-brand-400 hover:text-brand-300 font-medium mt-4 md:mt-0 group" data-i18n-key="projects_github_btn">
+                    Ver todo en GitHub <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
+
+            <!-- Dynamic Projects Container -->
+            <div id="projects-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Projects will be injected here via JS -->
+            </div>
+            
+            <div class="mt-8 text-center md:hidden">
+                <a href="https://github.com/tu-usuario" target="_blank" class="text-brand-400 font-medium hover:text-brand-300" data-i18n-key="projects_github_btn">Ver todo en GitHub <i class="fas fa-arrow-right ml-2"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section (New Section) -->
+    <section id="testimonios" class="py-20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-white" data-i18n-key="testimonials_title">Lo que dicen mis clientes</h2>
+                <p class="mt-4 text-gray-400" data-i18n-key="testimonials_subtitle">Asociaciones exitosas y resultados medibles.</p>
+            </div>
+
+            <div class="relative">
+                <div id="testimonial-carousel" class="testimonial-carousel rounded-2xl border border-gray-700 shadow-2xl bg-gray-800/80">
+                    <!-- Testimonials will be injected here via JS -->
+                </div>
+                
+                <!-- Carousel Controls -->
+                <div class="flex justify-center gap-4 mt-8">
+                    <button onclick="prevTestimonial()" class="p-3 rounded-full bg-gray-800 hover:bg-gray-700 text-brand-400 transition-colors border border-gray-700 shadow-md">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <button onclick="nextTestimonial()" class="p-3 rounded-full bg-gray-800 hover:bg-gray-700 text-brand-400 transition-colors border border-gray-700 shadow-md">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contacto" class="py-20 bg-gray-800/30">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-gray-900 rounded-2xl p-8 md:p-12 shadow-2xl border border-gray-800 relative overflow-hidden">
+                <!-- Decorative background elements -->
+                <div class="absolute top-0 right-0 w-64 h-64 bg-brand-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+
+                <div class="text-center mb-10 relative z-10">
+                    <h2 class="text-3xl font-bold text-white" data-i18n-key="contact_title">¿Listo para escalar tu proyecto?</h2>
+                    <p class="mt-4 text-gray-400" data-i18n-key="contact_subtitle">Estoy disponible para consultorías de arquitectura y desarrollo.</p>
+                    <p class="text-xs text-brand-500 mt-2" data-i18n-key="contact_db_info">Los mensajes se guardan en la base de datos de Firestore.</p>
+                </div>
+
+                <!-- Formulario de contacto -->
+                <form class="space-y-6 relative z-10" id="contact-form" onsubmit="submitContactForm(event)">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-400 mb-2" data-i18n-key="contact_label_name">Nombre</label>
+                        <input type="text" id="name" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all placeholder-gray-600" data-i18n-placeholder-key="contact_placeholder_name" placeholder="Tu nombre" required>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-400 mb-2" data-i18n-key="contact_label_email">Email</label>
+                        <input type="email" id="email" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all placeholder-gray-600" data-i18n-placeholder-key="contact_placeholder_email" placeholder="tucorreo@ejemplo.com" required>
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-gray-400 mb-2" data-i18n-key="contact_label_message">Mensaje</label>
+                        <textarea id="message" rows="4" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all placeholder-gray-600" data-i18n-placeholder-key="contact_placeholder_message" placeholder="Cuéntame los detalles de tu idea..." required></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" id="submit-btn" class="w-full md:w-auto px-8 py-3 bg-gradient-to-r from-brand-600 to-accent-500 text-white font-bold rounded-lg hover:opacity-90 transition-all transform hover:scale-[1.02] shadow-lg shadow-brand-500/25 disabled:opacity-50 disabled:cursor-not-allowed" data-i18n-key="contact_send_btn">
+                            Enviar Mensaje
+                        </button>
+                    </div>
+                    <!-- Message Box for Feedback (Replaces alert()) -->
+                    <div id="form-message" class="text-center mt-4 p-3 rounded-lg hidden transition-opacity duration-300"></div>
+                </form>
+
+                <div class="mt-12 flex justify-center gap-8 border-t border-gray-700 pt-8 relative z-10">
+                    <a href="https://github.com/tu-usuario" target="_blank" class="text-gray-400 hover:text-white text-2xl transition-colors transform hover:scale-110"><i class="fab fa-github"></i></a>
+                    <a href="https://linkedin.com/in/tu-usuario" target="_blank" class="text-gray-400 hover:text-white text-2xl transition-colors transform hover:scale-110"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://twitter.com/tu-usuario" target="_blank" class="text-gray-400 hover:text-white text-2xl transition-colors transform hover:scale-110"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 py-8 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
+            <p data-i18n-key="footer_text">&copy; 2023 Ingeniería de Software. Construido con Tailwind CSS & Vanilla JS.</p>
+        </div>
+    </footer>
+
+    <!-- MODAL COMPONENT (Hidden by default) -->
+    <div id="project-modal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm transition-opacity opacity-0" id="modal-backdrop"></div>
+
+        <!-- Modal Panel -->
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-2xl bg-gray-800 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-2xl border border-gray-700 opacity-0" id="modal-panel">
+                    
+                    <!-- Close Button -->
+                    <button onclick="closeModal()" class="absolute top-4 right-4 z-20 text-gray-400 hover:text-white bg-black/20 hover:bg-black/40 rounded-full p-2 transition-colors">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+
+                    <!-- Image Header -->
+                    <div class="relative h-64 bg-gray-900 overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-800 to-transparent z-10"></div>
+                        <div id="modal-image-container" class="w-full h-full flex items-center justify-center text-gray-700">
+                            <!-- Icon injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="px-6 pb-6 pt-2 sm:px-8 sm:pb-8">
+                        <div class="flex flex-wrap gap-2 mb-4" id="modal-tags">
+                            <!-- Tags injected via JS -->
+                        </div>
+                        
+                        <h3 class="text-2xl font-bold leading-6 text-white mb-2" id="modal-title"></h3>
+                        <p class="text-sm text-brand-400 font-medium mb-6" id="modal-subtitle"></p>
+                        
+                        <div class="text-gray-300 text-base leading-relaxed space-y-4 mb-8 max-h-60 overflow-y-auto modal-scroll pr-2" id="modal-description">
+                            <!-- Description injected via JS -->
+                        </div>
+
+                        <!-- Tech Stack Grid -->
+                        <div class="mb-8 p-4 bg-gray-900/50 rounded-lg border border-gray-700/50">
+                            <h4 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3" data-i18n-key="modal_tech_title">Tecnologías Clave</h4>
+                            <div class="flex flex-wrap gap-4 text-gray-300" id="modal-tech-stack">
+                                <!-- Tech icons/text injected via JS -->
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <a href="#" id="modal-link-demo" target="_blank" class="flex-1 inline-flex justify-center items-center px-4 py-3 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-lg transition-colors" data-i18n-key="modal_demo_btn">
+                                <i class="fas fa-external-link-alt mr-2"></i> Ver Demo en Vivo
+                            </a>
+                            <a href="#" id="modal-link-repo" target="_blank" class="flex-1 inline-flex justify-center items-center px-4 py-3 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-lg transition-colors border border-gray-600" data-i18n-key="modal_repo_btn">
+                                <i class="fab fa-github mr-2"></i> Ver Repositorio
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logic Script -->
+    <script type="module">
+        // Importaciones de Firebase necesarias
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Variables de configuración de Firebase proporcionadas por el entorno
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+
+        let db;
+        let auth;
+        let userId = null; // User ID
+        let isAuthReady = false; // Flag for Firebase Auth status
+
+        let currentLang = 'es'; // Default language
+        let currentTestimonialIndex = 0;
+
+        // --- TRADUCCIONES CENTRALIZADAS ---
+        const translations = {
+            es: {
+                // Navbar
+                nav_home: 'Inicio',
+                nav_stack: 'Stack',
+                nav_services: 'Servicios',
+                nav_projects: 'Proyectos',
+                nav_reviews: 'Opiniones',
+                nav_contact_btn: 'Contactar',
+                // Hero
+                hero_line_1: 'Desarrollo de Software adaptable con',
+                hero_line_2: 'Diversos Stacks y Arquitectura Cloud',
+                hero_subtitle: 'Soy un Ingeniero de Software con experiencia en MEAN, MERN, PHP/Laravel y arquitecturas cloud robustas (AWS/Firebase).',
+                hero_projects_btn: 'Ver Proyectos',
+                hero_contact_btn: 'Hablemos',
+                // Skills
+                skills_title: 'Mi Arsenal Tecnológico',
+                skills_subtitle: 'Herramientas que utilizo para dar vida a las ideas',
+                skill_angular_name: 'Angular (MEAN)',
+                skill_angular_desc: 'Componentes, Signals y NGRX.',
+                skill_react_name: 'React (MERN)',
+                skill_react_desc: 'Hooks, Context API y Redux.',
+                skill_node_name: 'Node.js',
+                skill_node_desc: 'REST APIs y Express.',
+                skill_php_name: 'PHP Core',
+                skill_php_desc: 'Desarrollo backend robusto.',
+                skill_laravel_name: 'Laravel',
+                skill_laravel_desc: 'Eloquent ORM y Blade.',
+                skill_aws_name: 'AWS Cloud',
+                skill_aws_desc: 'Lambda, S3, EC2, CloudFront.',
+                // Services
+                services_title: 'Servicios Especializados',
+                service_popular: 'Popular',
+                service_fullstack_name: 'Desarrollo Full Stack',
+                service_fullstack_desc: 'Creación de aplicaciones web complejas de punta a punta en stacks como MEAN, MERN y Laravel.',
+                service_landing_name: 'Landing Pages',
+                service_landing_desc: 'Páginas de aterrizaje de alto rendimiento. Optimizadas para SEO, carga ultrarrápida y máxima conversión.',
+                service_cloud_name: 'Arquitectura Cloud',
+                service_cloud_desc: 'Diseño e implementación de infraestructura escalable en AWS y Firebase. Serverless, Contenedores y CI/CD.',
+                // Projects
+                projects_title: 'Proyectos Destacados',
+                projects_subtitle: 'Haz clic en un proyecto para ver los detalles técnicos.',
+                projects_github_btn: 'Ver todo en GitHub',
+                // Testimonials
+                testimonials_title: 'Lo que dicen mis clientes',
+                testimonials_subtitle: 'Asociaciones exitosas y resultados medibles.',
+                // Contact
+                contact_title: '¿Listo para escalar tu proyecto?',
+                contact_subtitle: 'Estoy disponible para consultorías de arquitectura y desarrollo.',
+                contact_db_info: 'Los mensajes se guardan en la base de datos de Firestore.',
+                contact_label_name: 'Nombre',
+                contact_label_email: 'Email',
+                contact_label_message: 'Mensaje',
+                contact_placeholder_name: 'Tu nombre',
+                contact_placeholder_email: 'tucorreo@ejemplo.com',
+                contact_placeholder_message: 'Cuéntame los detalles de tu idea...',
+                contact_send_btn: 'Enviar Mensaje',
+                contact_success_title: '¡Mensaje Enviado!',
+                contact_success_body: 'Gracias por tu interés. Me pondré en contacto contigo pronto.',
+                contact_error_title: 'Error al Enviar',
+                contact_error_body: 'Hubo un error al guardar tu mensaje. Por favor, inténtalo de nuevo.',
+                // Modal
+                modal_tech_title: 'Tecnologías Clave',
+                modal_demo_btn: 'Ver Demo en Vivo',
+                modal_repo_btn: 'Ver Repositorio',
+                // Footer
+                footer_text: '&copy; 2023 Ingeniería de Software. Construido con Tailwind CSS & Vanilla JS.',
+            },
+            en: {
+                // Navbar
+                nav_home: 'Home',
+                nav_stack: 'Stack',
+                nav_services: 'Services',
+                nav_projects: 'Projects',
+                nav_reviews: 'Reviews',
+                nav_contact_btn: 'Contact',
+                // Hero
+                hero_line_1: 'Adaptable Software Development with',
+                hero_line_2: 'Diverse Stacks and Cloud Architecture',
+                hero_subtitle: 'I am a Software Engineer experienced in MEAN, MERN, PHP/Laravel, and robust cloud architectures (AWS/Firebase).',
+                hero_projects_btn: 'View Projects',
+                hero_contact_btn: 'Let\'s Talk',
+                // Skills
+                skills_title: 'My Technology Arsenal',
+                skills_subtitle: 'Tools I use to bring ideas to life',
+                skill_angular_name: 'Angular (MEAN)',
+                skill_angular_desc: 'Components, Signals, and NGRX.',
+                skill_react_name: 'React (MERN)',
+                skill_react_desc: 'Hooks, Context API, and Redux.',
+                skill_node_name: 'Node.js',
+                skill_node_desc: 'REST APIs and Express.',
+                skill_php_name: 'PHP Core',
+                skill_php_desc: 'Robust backend development.',
+                skill_laravel_name: 'Laravel',
+                skill_laravel_desc: 'Eloquent ORM and Blade.',
+                skill_aws_name: 'AWS Cloud',
+                skill_aws_desc: 'Lambda, S3, EC2, CloudFront.',
+                // Services
+                services_title: 'Specialized Services',
+                service_popular: 'Popular',
+                service_fullstack_name: 'Full Stack Development',
+                service_fullstack_desc: 'End-to-end creation of complex web applications using stacks like MEAN, MERN, and Laravel.',
+                service_landing_name: 'High-Performance Landing Pages',
+                service_landing_desc: 'High-performance landing pages. Optimized for SEO, ultra-fast loading, and maximum conversion.',
+                service_cloud_name: 'Cloud Architecture',
+                service_cloud_desc: 'Design and implementation of scalable infrastructure on AWS and Firebase. Serverless, Containers, and CI/CD.',
+                // Projects
+                projects_title: 'Featured Projects',
+                projects_subtitle: 'Click on a project to see the technical details.',
+                projects_github_btn: 'View All on GitHub',
+                // Testimonials
+                testimonials_title: 'What My Clients Say',
+                testimonials_subtitle: 'Successful partnerships and measurable results.',
+                // Contact
+                contact_title: 'Ready to scale your project?',
+                contact_subtitle: 'I am available for architecture consulting and development.',
+                contact_db_info: 'Messages are stored in the Firestore database.',
+                contact_label_name: 'Name',
+                contact_label_email: 'Email',
+                contact_label_message: 'Message',
+                contact_placeholder_name: 'Your name',
+                contact_placeholder_email: 'youremail@example.com',
+                contact_placeholder_message: 'Tell me the details of your idea...',
+                contact_send_btn: 'Send Message',
+                contact_success_title: 'Message Sent!',
+                contact_success_body: 'Thank you for your interest. I will get in touch with you shortly.',
+                contact_error_title: 'Submission Error',
+                contact_error_body: 'There was an error saving your message. Please try again.',
+                // Modal
+                modal_tech_title: 'Key Technologies',
+                modal_demo_btn: 'View Live Demo',
+                modal_repo_btn: 'View Repository',
+                // Footer
+                footer_text: '&copy; 2023 Software Engineering. Built with Tailwind CSS & Vanilla JS.',
+            }
+        };
+
+        // --- DATOS MOCK DE PROYECTOS Y TESTIMONIOS ---
+        const projectsData = [
+            {
+                id: 1,
+                icon: '<i class="fas fa-chart-line text-6xl text-brand-500"></i>',
+                tags: ['Full Stack', 'Cloud', 'Data'],
+                title: { es: 'Plataforma Analítica en Tiempo Real', en: 'Real-Time Analytics Platform' },
+                subtitle: { es: 'Dashboard escalable para monitoreo de SaaS.', en: 'Scalable dashboard for SaaS monitoring.' },
+                description: {
+                    es: 'Desarrollo de un sistema de recolección de métricas y visualización con baja latencia. Utiliza microservicios en AWS Lambda para el procesamiento de datos y DynamoDB para la persistencia. El frontend fue construido con Angular para una experiencia de usuario robusta y reactiva. Un sistema de notificaciones en tiempo real fue implementado usando WebSockets para alertar a los usuarios sobre umbrales críticos.',
+                    en: 'Development of a low-latency metric collection and visualization system. It uses microservices on AWS Lambda for data processing and DynamoDB for persistence. The frontend was built with Angular for a robust and reactive user experience. A real-time notification system was implemented using WebSockets to alert users of critical thresholds.'
+                },
+                techStack: ['Angular', 'Node.js/Express', 'AWS Lambda', 'DynamoDB', 'Tailwind CSS'],
+                demoLink: 'https://demo-analytics.com',
+                repoLink: 'https://github.com/tu-usuario/analytics-platform',
+            },
+            {
+                id: 2,
+                icon: '<i class="fas fa-store text-6xl text-purple-500"></i>',
+                tags: ['E-commerce', 'MERN', 'API'],
+                title: { es: 'Sistema de E-commerce Modular', en: 'Modular E-commerce System' },
+                subtitle: { es: 'Tienda en línea de alto tráfico con React y Node.', en: 'High-traffic online store with React and Node.' },
+                description: {
+                    es: 'Implementación de una solución completa de e-commerce utilizando el stack MERN. El frontend en React se conecta a una API RESTful en Node.js/Express. Incluye pasarela de pagos, gestión de inventario con MongoDB y autenticación de usuarios basada en JWT. El enfoque modular facilita la expansión y la integración con servicios externos como sistemas de logística.',
+                    en: 'Implementation of a complete e-commerce solution using the MERN stack. The React frontend connects to a RESTful API in Node.js/Express. It includes a payment gateway, inventory management with MongoDB, and JWT-based user authentication. The modular approach facilitates easy expansion and integration with external services such as logistics systems.'
+                },
+                techStack: ['React', 'Node.js/Express', 'MongoDB', 'Stripe API', 'Redux', 'Jest'],
+                demoLink: 'https://demo-ecommerce.com',
+                repoLink: 'https://github.com/tu-usuario/ecommerce-mern',
+            },
+            {
+                id: 3,
+                icon: '<i class="fas fa-users text-6xl text-red-500"></i>',
+                tags: ['CMS', 'PHP', 'Laravel'],
+                title: { es: 'Gestor de Contenido Empresarial', en: 'Enterprise Content Management System' },
+                subtitle: { es: 'CMS personalizado para un cliente B2B usando Laravel.', en: 'Custom CMS for a B2B client using Laravel.' },
+                description: {
+                    es: 'Creación de un Sistema de Gestión de Contenido (CMS) robusto y seguro a medida. Construido con PHP y el framework Laravel, aprovecha Eloquent ORM para una gestión de base de datos eficiente (MySQL). Implementa un sistema de permisos basado en roles y una interfaz de usuario administrativa limpia y responsiva para la publicación y edición de artículos y documentos.',
+                    en: 'Creation of a robust and secure custom Content Management System (CMS). Built with PHP and the Laravel framework, it leverages the Eloquent ORM for efficient database management (MySQL). It implements a role-based permission system and a clean, responsive administrative UI for publishing and editing articles and documents.'
+                },
+                techStack: ['Laravel', 'PHP', 'MySQL', 'Blade', 'Vite', 'Redis'],
+                demoLink: 'https://demo-cms.com',
+                repoLink: 'https://github.com/tu-usuario/laravel-cms',
+            },
+        ];
+
+        const testimonialsData = [
+            {
+                text: { 
+                    es: "La capacidad de respuesta y la profundidad técnica del equipo superaron mis expectativas. El nuevo sistema en AWS es un 200% más rápido que nuestra infraestructura anterior y ha reducido nuestros costes operativos en un 30%. ¡Un verdadero experto en Cloud!",
+                    en: "The team's responsiveness and technical depth exceeded my expectations. The new AWS system is 200% faster than our previous infrastructure and has reduced our operating costs by 30%. A true Cloud expert!"
+                },
+                author: "Dr. Elena Torres",
+                role: { es: "CTO, TechSolutions S.A.", en: "CTO, TechSolutions S.A." },
+            },
+            {
+                text: { 
+                    es: "Necesitábamos una landing page que convirtiera. La que nos entregaron, construida con React, es visualmente impresionante y duplicó nuestra tasa de captación de leads en el primer mes.",
+                    en: "We needed a landing page that converts. The one delivered, built with React, is visually stunning and doubled our lead capture rate in the first month."
+                },
+                author: "Javier Mendoza",
+                role: { es: "Director de Marketing, VeloCity", en: "Marketing Director, VeloCity" },
+            },
+            {
+                text: { 
+                    es: "El trabajo en la migración de nuestro antiguo monolito a microservicios basados en Node.js fue impecable. La documentación fue clara y la transición se hizo sin tiempo de inactividad.",
+                    en: "The work on migrating our old monolith to Node.js-based microservices was impeccable. The documentation was clear, and the transition was done with zero downtime."
+                },
+                author: "Laura Gómez",
+                role: { es: "CEO, InnovaSoft", en: "CEO, InnovaSoft" },
+            },
+        ];
+
+
+        // --- FIREBASE INICIALIZACIÓN Y AUTENTICACIÓN ---
+
+        /**
+         * Inicializa Firebase y autentica al usuario.
+         */
+        async function initFirebase() {
+            try {
+                if (Object.keys(firebaseConfig).length === 0) {
+                    console.warn("Firebase config not available. Running in local mode.");
+                    isAuthReady = true;
+                    return;
+                }
+
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                
+                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+                if (initialAuthToken) {
+                    // Si se proporciona un token, intenta el inicio de sesión con token personalizado
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    // Si no, inicia sesión anónimamente
+                    await signInAnonymously(auth);
+                }
+
+                // Asignar el userId del usuario autenticado o un ID aleatorio si es anónimo
+                userId = auth.currentUser?.uid || crypto.randomUUID();
+                isAuthReady = true;
+                console.log("Firebase initialized. User ID:", userId);
+
+            } catch (error) {
+                console.error("Error during Firebase initialization or authentication:", error);
+                isAuthReady = true; // Still set to true so other app features can run
+            }
+        }
+
+
+        // --- LÓGICA DE TRADUCCIÓN ---
+
+        /**
+         * Aplica las traducciones al idioma actual.
+         */
+        function applyTranslations() {
+            const current = translations[currentLang];
+            document.documentElement.lang = currentLang;
+
+            // Update text content
+            document.querySelectorAll('[data-i18n-key]').forEach(element => {
+                const key = element.getAttribute('data-i18n-key');
+                if (current[key]) {
+                    element.innerHTML = current[key];
+                }
+            });
+
+            // Update placeholders
+            document.querySelectorAll('[data-i18n-placeholder-key]').forEach(element => {
+                const key = element.getAttribute('data-i18n-placeholder-key');
+                if (current[key]) {
+                    element.setAttribute('placeholder', current[key]);
+                }
+            });
+
+            // Re-render dynamic content (Projects and Testimonials)
+            renderProjects();
+            renderTestimonials();
+        }
+
+        /**
+         * Alterna el idioma entre español (es) e inglés (en).
+         */
+        function toggleLanguage() {
+            currentLang = currentLang === 'es' ? 'en' : 'es';
+            localStorage.setItem('portfolioLang', currentLang);
+            updateFlagIcon();
+            applyTranslations();
+        }
+
+        /**
+         * Actualiza el icono de la bandera en la barra de navegación.
+         */
+        function updateFlagIcon() {
+            const container = document.getElementById('lang-toggle-container');
+            if (container) {
+                if (currentLang === 'es') {
+                    // Mostrar bandera de Reino Unido para cambiar a inglés
+                    container.innerHTML = '<span class="flag-icon flag-icon-gb rounded-full"></span>';
+                } else {
+                    // Mostrar bandera de España para cambiar a español
+                    container.innerHTML = '<span class="flag-icon flag-icon-es rounded-full"></span>';
+                }
+            }
+        }
+
+
+        // --- LÓGICA DE PROYECTOS Y MODAL ---
+
+        /**
+         * Genera el HTML de un tag tecnológico.
+         */
+        function createTag(text) {
+            return `<span class="inline-block bg-gray-700/50 text-brand-300 text-xs font-semibold px-3 py-1 rounded-full border border-gray-600">${text}</span>`;
+        }
+        
+        /**
+         * Renderiza la cuadrícula de proyectos.
+         */
+        function renderProjects() {
+            const grid = document.getElementById('projects-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            projectsData.forEach(project => {
+                const card = document.createElement('div');
+                card.className = 'bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-700 hover:border-brand-500 transition-all duration-300 cursor-pointer transform hover:scale-[1.02] group';
+                card.setAttribute('onclick', `openModal(${project.id})`);
+                
+                const tagsHtml = project.tags.map(tag => createTag(tag)).join('');
+
+                card.innerHTML = `
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="text-4xl text-brand-500 group-hover:text-brand-400 transition-colors">${project.icon}</div>
+                        <div class="flex-grow">
+                            <div class="text-sm font-medium text-gray-400">${tagsHtml}</div>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brand-300 transition-colors">${project.title[currentLang]}</h3>
+                    <p class="text-gray-400">${project.subtitle[currentLang]}</p>
+                    <div class="mt-4 text-brand-500 font-semibold flex items-center">
+                        <span class="text-sm">${translations[currentLang].modal_demo_btn}</span>
+                        <i class="fas fa-chevron-right ml-2 text-xs"></i>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        /**
+         * Muestra el modal de detalles del proyecto.
+         * @param {number} id - ID del proyecto.
+         */
+        window.openModal = function(id) {
+            const project = projectsData.find(p => p.id === id);
+            if (!project) return;
+
+            const modal = document.getElementById('project-modal');
+            const backdrop = document.getElementById('modal-backdrop');
+            const panel = document.getElementById('modal-panel');
+
+            // Set content
+            document.getElementById('modal-title').textContent = project.title[currentLang];
+            document.getElementById('modal-subtitle').textContent = project.subtitle[currentLang];
+            
+            // Format description with paragraphs
+            const descHtml = project.description[currentLang].split(/\.\s*/).map(p => `<p>${p.trim() + (p.endsWith('.') ? '' : '.')}</p>`).join('');
+            document.getElementById('modal-description').innerHTML = descHtml;
+
+            // Tags
+            document.getElementById('modal-tags').innerHTML = project.tags.map(tag => createTag(tag)).join('');
+
+            // Tech Stack
+            const techHtml = project.techStack.map(tech => 
+                `<span class="inline-flex items-center text-sm font-medium text-gray-300">
+                    <i class="fas fa-microchip text-brand-500 mr-2"></i> ${tech}
+                </span>`
+            ).join('');
+            document.getElementById('modal-tech-stack').innerHTML = techHtml;
+
+            // Links
+            document.getElementById('modal-link-demo').href = project.demoLink;
+            document.getElementById('modal-link-repo').href = project.repoLink;
+            
+            // Icon in image container
+            document.getElementById('modal-image-container').innerHTML = project.icon;
+
+
+            // Show Modal with animation
+            modal.classList.remove('hidden');
+            // Animate backdrop
+            setTimeout(() => { backdrop.classList.add('opacity-100'); }, 10);
+            // Animate panel
+            panel.classList.remove('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+            panel.classList.add('animate-modal-open');
+        }
+
+        /**
+         * Cierra el modal de detalles del proyecto.
+         */
+        window.closeModal = function() {
+            const modal = document.getElementById('project-modal');
+            const backdrop = document.getElementById('modal-backdrop');
+            const panel = document.getElementById('modal-panel');
+
+            // Reverse animation
+            backdrop.classList.remove('opacity-100');
+            panel.classList.remove('animate-modal-open');
+            panel.classList.add('animate-modal-close');
+
+            // Hide after animation finishes
+            panel.addEventListener('animationend', () => {
+                modal.classList.add('hidden');
+                panel.classList.remove('animate-modal-close');
+                panel.classList.add('opacity-0');
+            }, { once: true });
+        }
+        
+        // --- LÓGICA DE TESTIMONIOS (CARRUSEL) ---
+
+        /**
+         * Renderiza el carrusel de testimonios.
+         */
+        function renderTestimonials() {
+            const carousel = document.getElementById('testimonial-carousel');
+            if (!carousel) return;
+            carousel.innerHTML = '';
+            
+            testimonialsData.forEach(testimonial => {
+                const card = document.createElement('div');
+                card.className = 'testimonial-card p-10 bg-gray-900/50';
+                card.innerHTML = `
+                    <div class="flex flex-col items-center text-center">
+                        <i class="fas fa-quote-left text-brand-500 text-3xl mb-4"></i>
+                        <p class="text-xl italic text-gray-200 mb-6 max-w-xl">${testimonial.text[currentLang]}</p>
+                        <div class="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mb-3 text-2xl text-white font-bold">${testimonial.author.charAt(0)}</div>
+                        <p class="font-semibold text-white">${testimonial.author}</p>
+                        <p class="text-sm text-brand-400">${testimonial.role[currentLang]}</p>
+                    </div>
+                `;
+                carousel.appendChild(card);
+            });
+            // Reset index and position on re-render
+            currentTestimonialIndex = 0;
+            updateCarouselPosition();
+        }
+
+        /**
+         * Actualiza la posición del carrusel para mostrar el testimonio actual.
+         */
+        function updateCarouselPosition() {
+            const carousel = document.getElementById('testimonial-carousel');
+            if (carousel) {
+                const offset = currentTestimonialIndex * carousel.offsetWidth;
+                carousel.scrollTo({
+                    left: offset,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        /**
+         * Navega al testimonio anterior.
+         */
+        window.prevTestimonial = function() {
+            if (currentTestimonialIndex > 0) {
+                currentTestimonialIndex--;
+                updateCarouselPosition();
+            } else {
+                // Loop back to the last testimonial
+                currentTestimonialIndex = testimonialsData.length - 1;
+                updateCarouselPosition();
+            }
+        }
+
+        /**
+         * Navega al siguiente testimonio.
+         */
+        window.nextTestimonial = function() {
+            if (currentTestimonialIndex < testimonialsData.length - 1) {
+                currentTestimonialIndex++;
+                updateCarouselPosition();
+            } else {
+                // Loop back to the first testimonial
+                currentTestimonialIndex = 0;
+                updateCarouselPosition();
+            }
+        }
+
+        // --- LÓGICA DEL FORMULARIO DE CONTACTO ---
+
+        /**
+         * Muestra un mensaje de feedback al usuario.
+         * @param {string} message - El mensaje a mostrar.
+         * @param {string} type - 'success' o 'error'.
+         */
+        function showFormMessage(message, type) {
+            const msgBox = document.getElementById('form-message');
+            msgBox.textContent = message;
+            msgBox.classList.remove('hidden', 'bg-red-900/50', 'text-red-300', 'bg-green-900/50', 'text-green-300');
+            
+            if (type === 'success') {
+                msgBox.classList.add('bg-green-900/50', 'text-green-300');
+            } else if (type === 'error') {
+                msgBox.classList.add('bg-red-900/50', 'text-red-300');
+            }
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                msgBox.classList.add('hidden');
+            }, 5000);
+        }
+
+        /**
+         * Maneja el envío del formulario de contacto y guarda en Firestore.
+         */
+        window.submitContactForm = async function(event) {
+            event.preventDefault();
+            
+            if (!isAuthReady || !db) {
+                showFormMessage(translations[currentLang].contact_error_body, 'error');
+                return;
+            }
+
+            const btn = document.getElementById('submit-btn');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> ${currentLang === 'es' ? 'Enviando...' : 'Sending...'}`;
+
+
+            const data = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                message: document.getElementById('message').value,
+                timestamp: new Date(),
+                userId: userId, // Incluir el ID de usuario para trazabilidad
+                appId: appId,
+            };
+
+            const maxRetries = 5;
+            let currentRetry = 0;
+
+            const collectionPath = `artifacts/${appId}/public/data/contact_messages`;
+
+            while (currentRetry < maxRetries) {
+                try {
+                    await addDoc(collection(db, collectionPath), data);
+                    
+                    // Success
+                    showFormMessage(translations[currentLang].contact_success_title + ': ' + translations[currentLang].contact_success_body, 'success');
+                    document.getElementById('contact-form').reset();
+                    break; // Exit loop on success
+                } catch (error) {
+                    currentRetry++;
+                    console.error(`Error saving document (Attempt ${currentRetry}):`, error);
+
+                    if (currentRetry >= maxRetries) {
+                        // Max retries reached
+                        showFormMessage(translations[currentLang].contact_error_title + ': ' + translations[currentLang].contact_error_body, 'error');
+                    } else {
+                        // Exponential backoff wait
+                        const delay = Math.pow(2, currentRetry) * 1000;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    }
+                }
+            }
+            
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        };
+
+
+        // --- SETUP INICIAL ---
+
+        /**
+         * Función principal de inicialización que se ejecuta al cargar la página.
+         */
+        async function initialize() {
+            // 1. Load language preference
+            const storedLang = localStorage.getItem('portfolioLang');
+            if (storedLang && translations[storedLang]) {
+                currentLang = storedLang;
+            }
+
+            // 2. Set initial UI state
+            updateFlagIcon();
+            applyTranslations();
+            
+            // 3. Initialize Firebase and Auth
+            await initFirebase();
+            
+            // 4. Set carousel resize listener (for responsiveness)
+            window.addEventListener('resize', updateCarouselPosition);
+        }
+
+        // Ejecutar la inicialización al cargar la ventana
+        window.onload = initialize;
+
+    </script>
+</body>
+</html>
